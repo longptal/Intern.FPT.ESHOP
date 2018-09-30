@@ -1,0 +1,134 @@
+<!-- BEGIN: Subheader -->
+<div class="m-subheader" appunwraptag="">
+  <div class="d-flex align-items-center border-title">
+    <div class="mr-auto">
+      <h3 class="m-subheader__title">
+        Product Management
+      </h3>
+      <!--<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+        <li class="m-nav__item m-nav__item--home">
+          <a href="#" class="m-nav__link m-nav__link--icon">
+            <i class="m-nav__link-icon la la-home"></i>
+          </a>
+        </li>
+        <li class="m-nav__separator">
+          -
+        </li>
+        <li class="m-nav__item">
+          <a href="" class="m-nav__link">
+            <span class="m-nav__link-text">
+              Reports
+            </span>
+          </a>
+        </li>
+        <li class="m-nav__separator">
+          -
+        </li>
+        <li class="m-nav__item">
+          <a href="" class="m-nav__link">
+            <span class="m-nav__link-text">
+              Revenue
+            </span>
+          </a>
+        </li>
+      </ul>-->
+    </div>
+    <div style="padding-right: 15px;">
+      <button class="btn btn-outline-success m-btn m-btn--icon m-btn--outline-2x" (click)="AddProduct()">
+        <span>
+          <i class="fa fa-plus"></i>
+          <span>Add</span>
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+<!-- END: Subheader -->
+<!--BEGIN: Content-->
+<div class="m-content">
+  <div class="col-md-12">
+    <div class="m-section">
+      <table class="table table-bordered m-table m-table--border-metal table-hover m-table--head-bg-success">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Code</th>
+            <th>Category</th>
+            <th>Unit</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-center">#</td>
+            <td>
+              <input type="text" class="form-control" placeholder="SearchCode..." [(ngModel)]="ProductSearchEntity.Code" />
+            </td>
+            <td>
+                <ng-select [items]="CategoryEntities"
+                           bindLabel="Code"
+                           bindValue="Id"
+                           placeholder="Search Category..."
+                           [(ngModel)]="ProductSearchEntity.CategoryId">
+                </ng-select>
+            </td>
+            <td></td>
+            <td class="text-center">
+                <div>
+                    <a href="#" class="btn btn-brand m-btn m-btn--icon btn-sm m-btn--icon-only m-btn--pill" (click)="SearchProduct(CategorySearchEntity)">
+                        <i class="fa fa-search"></i>
+                    </a>
+                    <a href="#" class="btn btn-primary m-btn m-btn--icon btn-sm m-btn--icon-only  m-btn--pill" (click)="SearchProduct()">
+                        <i class="fa fa-refresh"></i>
+                    </a>
+                </div>
+            </td>
+          </tr>
+          <tr *ngFor="let ProductEntity of ProductEntities; index as i">
+            <td class="text-center">{{i + 1}}</td>
+            <td>
+                <span *ngIf="!ProductEntity.IsEdit">{{ProductEntity.Code}}</span>
+                <input class="form-control" *ngIf="ProductEntity.IsEdit" placeholder="Enter Code..." [(ngModel)]="ProductEntity.Code" />
+            </td>
+            <td>
+                <span *ngIf="!ProductEntity.IsEdit">{{ProductEntity.CategoryEntity?.Code}}</span>
+                <ng-select [items]="CategoryEntities"
+                           bindLabel="Code"
+                           bindValue="Id"
+                           placeholder="Choose Category..."
+                           [(ngModel)]="ProductEntity.CategoryId" *ngIf="ProductEntity.IsEdit">
+                </ng-select>
+            </td>
+            <td>
+                <span *ngIf="!ProductEntity.IsEdit">{{ProductEntity.Unit}}</span>
+                <input class="form-control" *ngIf="ProductEntity.IsEdit" placeholder="Enter Unit..." [(ngModel)]="ProductEntity.Unit" />
+            </td>
+            <td class="text-center">
+                <div *ngIf="!ProductEntity.IsEdit">
+                    <button class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="ToProductDetail(ProductEntity)">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                            mwlConfirmationPopover [popoverTitle]="'Are you sure?'" placement="top" (confirm)="DeleteProduct(ProductEntity)" (cancel)="cancelClicked = true">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
+                <div *ngIf="ProductEntity.IsEdit">
+                    <button class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="SaveProduct(ProductEntity)">
+                        <i class="fa fa-save"></i>
+                    </button>
+                    <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="CancelProduct(ProductEntity)">
+                        <i class="fa fa-remove"></i>
+                    </button>
+                </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <app-paging [PagingModel]="PagingModel" [dot]="true" (onChanges)="SearchProduct(SearchEntity)"></app-paging>
+  </div>
+</div>
+<!--END: Content-->

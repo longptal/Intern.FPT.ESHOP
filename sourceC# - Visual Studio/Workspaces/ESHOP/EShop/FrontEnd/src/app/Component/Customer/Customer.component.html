@@ -1,0 +1,171 @@
+<!-- BEGIN: Subheader -->
+<div class="m-subheader" appunwraptag="">
+    <div class="d-flex align-items-center border-title">
+        <div class="mr-auto">
+            <h3 class="m-subheader__title">
+                Customer Management
+            </h3>
+            <!--<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+                <li class="m-nav__item m-nav__item--home">
+                    <a href="#" class="m-nav__link m-nav__link--icon">
+                        <i class="m-nav__link-icon la la-home"></i>
+                    </a>
+                </li>
+                <li class="m-nav__separator">
+                    -
+                </li>
+                <li class="m-nav__item">
+                    <a href="" class="m-nav__link">
+                        <span class="m-nav__link-text">
+                            Reports
+                        </span>
+                    </a>
+                </li>
+                <li class="m-nav__separator">
+                    -
+                </li>
+                <li class="m-nav__item">
+                    <a href="" class="m-nav__link">
+                        <span class="m-nav__link-text">
+                            Revenue
+                        </span>
+                    </a>
+                </li>
+            </ul>-->
+        </div>
+        <div>
+            <button class="btn btn-outline-success m-btn m-btn--icon m-btn--outline-2x" (click)="Add({Id:0, IsEdit: true})">
+                <span>
+                    <i class="fa fa-plus"></i>
+                    <span>Add</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- END: Subheader -->
+
+<!--BEGIN: Content-->
+<div class="m-content">
+    <div class="col-md-12">
+        <div class="m-section">
+            <table class="table table-bordered m-table m-table--border-metal table-hover m-table--head-bg-success">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Username</th>
+                    <th>Display</th>
+                    <th>Picture</th>
+                    <th>FacebookId</th>
+                    <th>FacebookEmail</th>
+                    <th>GoogleId</th>
+                    <th>GoogleEmail</th>
+                    <th>Customer Group</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody> 
+                  <tr>
+                    <td class="text-center">#</td>
+                    <td>
+                      <input type="text" class="form-control" placeholder="Search Username..." [(ngModel)]="CustomerSearchEntity.Username" />
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" placeholder="Search Display..." [(ngModel)]="CustomerSearchEntity.Display" />
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" placeholder="Search Picture..." [(ngModel)]="CustomerSearchEntity.Picture" />
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" placeholder="Search FacebookId..." [(ngModel)]="CustomerSearchEntity.FacebookId" />
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" placeholder="Search FacebookEmail..." [(ngModel)]="CustomerSearchEntity.FacebookEmail" />
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" placeholder="Search GoogleId..." [(ngModel)]="CustomerSearchEntity.GoogleId" />
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" placeholder="Search GoogleEmail..." [(ngModel)]="CustomerSearchEntity.GoogleEmail" />
+                    </td>
+                    <td>
+                      <ng-select-custom [Service]="CustomerGroupService" [Entity]="CustomerSearchEntity.CustomerGroupId"
+                                        [BindProperty]="'Id'"
+                                        (Change)="CustomerSearchEntity.CustomerGroupId = $event?.Id; Search(CustomerSearchEntity)"
+                                        (keyup.enter)="Search(CustomerSearchEntity)"
+                                        [IsSearch]="true" [Placeholder]="'Search...'"></ng-select-custom>
+                    </td>
+                    <td class="button-crud">
+                      <div>
+                        <button class="btn btn-brand m-btn m-btn--icon btn-sm m-btn--icon-only m-btn--pill" (click)="Search(CustomerSearchEntity, false)">
+                          <i class="fa fa-search"></i>
+                        </button>
+                        <button class="btn btn-primary m-btn m-btn--icon btn-sm m-btn--icon-only  m-btn--pill" (click)="Search(CustomerSearchEntity, true)">
+                          <i class="fa fa-refresh"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngFor="let CustomerEntity of Entities; index as i">
+                    <td scope="row" class="text-center">{{i + 1}}</td>
+                    <td>
+                      <div *ngIf="!CustomerEntity.IsEdit">{{CustomerEntity.Username}}</div>
+                      <input class="form-control" *ngIf="CustomerEntity.IsEdit" placeholder="Enter Username..." [(ngModel)]="CustomerEntity.Username" />
+                    </td>
+                    <td>
+                      <div *ngIf="!CustomerEntity.IsEdit">{{CustomerEntity.Display}}</div>
+                      <input class="form-control" *ngIf="CustomerEntity.IsEdit" placeholder="Enter Display..." [(ngModel)]="CustomerEntity.Display" />
+                    </td>
+                    <td>
+                      <div *ngIf="!CustomerEntity.IsEdit">{{CustomerEntity.Picture}}</div>
+                      <input class="form-control" *ngIf="CustomerEntity.IsEdit" placeholder="Enter Picture..." [(ngModel)]="CustomerEntity.Picture" />
+                    </td>
+                    <td>
+                      <div *ngIf="!CustomerEntity.IsEdit">{{CustomerEntity.FacebookId}}</div>
+                      <input class="form-control" *ngIf="CustomerEntity.IsEdit" placeholder="Enter FacebookId..." [(ngModel)]="CustomerEntity.FacebookId" />
+                    </td>
+                    <td>
+                      <div *ngIf="!CustomerEntity.IsEdit">{{CustomerEntity.FacebookEmail}}</div>
+                      <input class="form-control" *ngIf="CustomerEntity.IsEdit" placeholder="Enter FacebookEmail..." [(ngModel)]="CustomerEntity.FacebookEmail" />
+                    </td>
+                    <td>
+                      <div *ngIf="!CustomerEntity.IsEdit">{{CustomerEntity.GoogleId}}</div>
+                      <input class="form-control" *ngIf="CustomerEntity.IsEdit" placeholder="Enter GoogleId..." [(ngModel)]="CustomerEntity.GoogleId" />
+                    </td>
+                    <td>
+                      <div *ngIf="!CustomerEntity.IsEdit">{{CustomerEntity.GoogleEmail}}</div>
+                      <input class="form-control" *ngIf="CustomerEntity.IsEdit" placeholder="Enter GoogleEmail..." [(ngModel)]="CustomerEntity.GoogleEmail" />
+                    </td>
+                    <td>
+                      <div *ngIf="!CustomerEntity.IsEdit">{{CustomerEntity.CustomerGroupEntity.Name}}</div>
+                      <ng-select-custom *ngIf="CustomerEntity.IsEdit" [Service]="CustomerGroupService"
+                                        [Entity]="CustomerEntity.CustomerGroupEntity"
+                                        (Change)="CustomerEntity.CustomerGroupId = $event?.Id"></ng-select-custom>
+                    </td>
+                    <td class="button-crud">
+                      <div *ngIf="!CustomerEntity.IsEdit">
+                        <button class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="Edit(CustomerEntity)">
+                          <i class="fa fa-pencil"></i>
+                        </button>
+                        <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                                mwlConfirmationPopover [popoverTitle]="'Are you sure?'" placement="top" (confirm)="Delete(CustomerEntity)" (cancel)="cancelClicked = true">
+                          <i class="fa fa-trash"></i>
+                        </button>
+                      </div>
+                      <div *ngIf="CustomerEntity.IsEdit">
+                        <button class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="Save(CustomerEntity)">
+                          <i class="fa fa-save"></i>
+                        </button>
+                        <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="Cancel(CustomerEntity)">
+                          <i class="fa fa-remove"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<app-paging [PagingModel]="PagingModel" [dot]="true" (onChanges)="Search()"></app-paging>
+<!--END: Content-->

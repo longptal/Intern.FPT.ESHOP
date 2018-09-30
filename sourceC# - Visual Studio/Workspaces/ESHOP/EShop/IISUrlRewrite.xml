@@ -1,0 +1,13 @@
+﻿<rewrite>
+  <rules>
+    <rule name="AngularJS Routes" stopProcessing="false">
+      <match url="^admin/.*" />
+      <conditions logicalGrouping="MatchAll">
+        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+        <add input="{REQUEST_URI}" pattern="^/(api)|(help)|(auth/)|(print)|(home/logout)" negate="true" />
+      </conditions>
+      <action type="Rewrite" url="admin" />
+    </rule>
+  </rules>
+</rewrite>

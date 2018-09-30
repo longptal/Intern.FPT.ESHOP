@@ -1,0 +1,77 @@
+<!--BEGIN: Content-->
+<div class="m-content">
+  <div class="col-md-12">
+    <form class="form-inline">
+      <div class="form-group">
+        <label>Order Number:</label>
+        <input type="text" class="form-control" [(ngModel)]="OrderLineEntity.Invoice" placeholder="Jane Doe">
+      </div>
+      <div class="form-group">
+        <label>Warehouse: </label>
+        <ng-select-custom [Service]="WarehouseService" [SearchProperty]="'Name'"
+                          [Init]="{Display : OrderLineEntity.WarehouseEntity?.Name}" (Change)="OrderLineEntity.WarehouseEntity = $event?.Name">
+          <ng-template #templateRef let-default let-Name="Name">
+            <span>{{Name}}</span>
+          </ng-template>
+        </ng-select-custom>
+      </div>
+    </form>
+  </div>
+  <div class="col-md-12">
+    <div class="m-section">
+      <table class="table table-bordered m-table m-table--border-metal table-hover ">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Product Name</th>
+            <th>Pack Name</th>
+            <th>Quantity</th>
+            <th>UnitPrice</th>
+            <th>Price</th>
+            <th>TaxAmount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let OrderLineEntity of Entities; index as i">
+            <td scope="row">{{i + 1}}</td>
+            <td>
+              <div class="full-width">
+                <ng-select-custom [Service]="ProductService" [SearchProperty]="'Code'"
+                                  [Init]="{Code : OrderLineEntity.ProductEntity?.Code}" (Change)= "OrderLineEntity.ProductId = $event?.Id">
+                  <ng-template #templateRef let-default let-Code="Code">
+                    <span>{{Code}}</span>
+                  </ng-template>
+                </ng-select-custom>
+              </div>
+            </td>
+            <td>
+              <input class="form-control fullwidth" placeholder="Enter Pack Name..." [(ngModel)]="OrderLineEntity.PackName" />
+            </td>
+            <td>
+              <input type="text" class="form-control fullwidth" placeholder="Enter Quantity..." [(ngModel)]="OrderLineEntity.Quantity" currencyMask/>
+            </td>
+            <td>
+              <input type="text" class="form-control fullwidth" placeholder="Enter Price..." [(ngModel)]="OrderLineEntity.Price" currencyMask />
+            </td>
+            <td>
+              <div class="full-width">
+                <ng-select-custom [Service]="TaxService" [SearchProperty]="'Code'"
+                                  [Init]="{Code : OrderLineEntity.Tax}" (Change)="OrderLineEntity.Tax = $event?.Code">
+                  <ng-template #templateRef let-default let-Code="Code">
+                    <span>{{Code}}</span>
+                  </ng-template>
+                </ng-select-custom>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="8">
+              <a class="addnewrow" style=""><i class="fa fa-plus"></i> Add new row</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!--END: Content-->

@@ -1,0 +1,191 @@
+<!-- BEGIN: Subheader -->
+<div class="m-subheader" appunwraptag="">
+  <div class="d-flex align-items-center border-title">
+    <div class="mr-auto">
+      <h3 class="m-subheader__title">
+        IssueNote Management
+      </h3>
+      <!--<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+        <li class="m-nav__item m-nav__item--home">
+          <a href="#" class="m-nav__link m-nav__link--icon">
+            <i class="m-nav__link-icon la la-home"></i>
+          </a>
+        </li>
+        <li class="m-nav__separator">
+          -
+        </li>
+        <li class="m-nav__item">
+          <a href="" class="m-nav__link">
+            <span class="m-nav__link-text">
+              Reports
+            </span>
+          </a>
+        </li>
+        <li class="m-nav__separator">
+          -
+        </li>
+        <li class="m-nav__item">
+          <a href="" class="m-nav__link">
+            <span class="m-nav__link-text">
+              Revenue
+            </span>
+          </a>
+        </li>
+      </ul>-->
+    </div>
+    <div style="margin-top: 2px; margin-right: 7px; width: 300px;">
+      <!--<ng-select [items]="SupplierEntities"
+                 (ngModelChange)="SupplierEntity = $event; ChooseSupplier(SupplierEntity, IssueNoteEntity)"
+                 bindLabel="Name"
+                 bindValue="SupplierEntity"
+                 placeholder="Choose Supplier..."
+                 [(ngModel)]="SupplierEntity">
+      </ng-select>-->
+      <ng-select [items]="SupplierEntities"
+                 bindLabel="Name"
+                 bindValue="Id"
+                 placeholder="Choose Supplier..."
+                 [(ngModel)]="SupplierEntity.Id">
+      </ng-select>
+    </div>
+    <div>
+      <a class="btn btn-outline-success m-btn m-btn--icon m-btn--outline-2x" [routerLink]="['/IssueNotes/',0]"><i class="fa fa-plus"></i> Add</a>
+      <!--<button class="btn btn-outline-success m-btn m-btn--icon m-btn--outline-2x" (click)="AddIssueNote()">
+        <span>
+          <i class="fa fa-plus"></i>
+          <span>Add</span>
+        </span>
+      </button>-->
+    </div>
+  </div>
+</div>
+<!-- END: Subheader -->
+<!--BEGIN: Content-->
+<div class="m-content">
+  <div class="col-md-12">
+    <div class="m-section">
+      <table class="table table-bordered m-table m-table--border-metal table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Warehouse</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Description</th>
+            <!--<th>Total</th>-->
+            <!--<th>Receipt Date</th>
+            <th>Receipt User</th>-->
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search Warehouse..." />
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search Product..." />
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search Quantity..." />
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search Unit Price..." />
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search Description..." />
+            </td>
+            <!--<td>
+              <input type="text" class="form-control" placeholder="Search Total..." />
+            </td>-->
+            <!--<td>
+              <input type="text" class="form-control" placeholder="Search Receipt User..." />
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search Receipt User..." />
+            </td>-->
+            <td class="button-crud">
+              <div>
+                <button class="btn btn-brand m-btn m-btn--icon btn-sm m-btn--icon-only m-btn--pill">
+                  <i class="fa fa-search"></i>
+                </button>
+                <button class="btn btn-primary m-btn m-btn--icon btn-sm m-btn--icon-only  m-btn--pill">
+                  <i class="fa fa-refresh"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let IssueNoteEntity of IssueNoteEntities; index as i">
+            <td scope="row">{{i + 1}}</td>
+            <td>
+              <span *ngIf="!IssueNoteEntity.IsEdit">{{IssueNoteEntity.WareHouseEntity.Name}}</span>
+              <ng-select [items]="WareHouseEntities"
+                         (ngModelChange)="IssueNoteEntity.WareHouseId=$event; GetProduct(IssueNoteEntity.WareHouseId)"
+                         bindLabel="WareHouseEntity.Name"
+                         bindValue="WareHouseId"
+                         placeholder="Choose Warehouse..."
+                         [(ngModel)]="IssueNoteEntity.WareHouseId" *ngIf="IssueNoteEntity.IsEdit">
+              </ng-select>
+            </td>
+            <td>
+              <span *ngIf="!IssueNoteEntity.IsEdit">{{IssueNoteEntity.ProductEntity.Code}}</span>
+              <ng-select [items]="InventoryEntities"
+                         bindLabel="ProductEntity.Code"
+                         bindValue="ProductId"
+                         placeholder="Choose Product..."
+                         [(ngModel)]="IssueNoteEntity.ProductId" *ngIf="IssueNoteEntity.IsEdit">
+              </ng-select>
+            </td>
+            <td>
+              <span *ngIf="!IssueNoteEntity.IsEdit">{{IssueNoteEntity.Quantity}}</span>
+              <input type="number" class="form-control" *ngIf="IssueNoteEntity.IsEdit" placeholder="Enter Quantity..." [(ngModel)]="IssueNoteEntity.Quantity" />
+            </td>
+            <td>
+              <span *ngIf="!IssueNoteEntity.IsEdit">{{IssueNoteEntity.UnitPrice}}</span>
+              <input type="number" class="form-control" *ngIf="IssueNoteEntity.IsEdit" placeholder="Enter Unit Price..." [(ngModel)]="IssueNoteEntity.UnitPrice" />
+            </td>
+            <td>
+              <span *ngIf="!IssueNoteEntity.IsEdit">{{IssueNoteEntity.Description}}</span>
+              <input class="form-control" *ngIf="IssueNoteEntity.IsEdit" placeholder="Enter Description..." [(ngModel)]="IssueNoteEntity.Description" />
+            </td>
+            <!--<td>
+              <span *ngIf="!IssueNoteEntity.IsEdit">{{IssueNoteEntity.Route}}</span>
+              <input class="form-control" *ngIf="IssueNoteEntity.IsEdit" placeholder="Enter Route..." [(ngModel)]="IssueNoteEntity.Route" />
+            </td>
+            <td>
+              <span *ngIf="!IssueNoteEntity.IsEdit">{{IssueNoteEntity.Route}}</span>
+              <input class="form-control" *ngIf="IssueNoteEntity.IsEdit" placeholder="Enter Route..." [(ngModel)]="IssueNoteEntity.Route" />
+            </td>-->
+            <td class="button-crud">
+              <div *ngIf="!IssueNoteEntity.IsEdit">
+                <button class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                        data-toggle="m-tooltip" data-original-title="Edit" data-placement="left" data-skin="dark" (click)="EditIssueNote(IssueNoteEntity)">
+                  <i class="fa fa-pencil"></i>
+                </button>
+                <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                        data-toggle="m-tooltip" data-original-title="Delete" data-placement="right" data-skin="dark"
+                        mwlConfirmationPopover [popoverTitle]="'Are you sure?'" placement="top" (confirm)="DeleteIssueNote(IssueNoteEntity)" (cancel)="cancelClicked = true">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
+              <div *ngIf="IssueNoteEntity.IsEdit">
+                <button class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                        data-toggle="m-tooltip" data-original-title="Save" data-placement="left" data-skin="dark" (click)="SaveIssueNote(IssueNoteEntity)">
+                  <i class="fa fa-save"></i>
+                </button>
+                <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                        data-toggle="m-tooltip" data-original-title="Cancel" data-placement="right" data-skin="dark" (click)="CancelIssueNote(IssueNoteEntity)">
+                  <i class="fa fa-remove"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<app-paging [PagingModel]="PagingModel" [dot]="true" (onChanges)="SearchIssueNote()"></app-paging>
+<!--END: Content-->

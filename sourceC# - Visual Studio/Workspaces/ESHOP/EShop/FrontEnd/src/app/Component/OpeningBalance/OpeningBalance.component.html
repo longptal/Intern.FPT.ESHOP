@@ -1,0 +1,183 @@
+<!-- BEGIN: Subheader -->
+<div class="m-subheader" appunwraptag="">
+  <div class="d-flex align-items-center border-title">
+    <div class="mr-auto">
+      <h3 class="m-subheader__title">
+        Opening Balance Management
+      </h3>
+      <!--<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+        <li class="m-nav__item m-nav__item--home">
+          <a href="#" class="m-nav__link m-nav__link--icon">
+            <i class="m-nav__link-icon la la-home"></i>
+          </a>
+        </li>
+        <li class="m-nav__separator">
+          -
+        </li>
+        <li class="m-nav__item">
+          <a href="" class="m-nav__link">
+            <span class="m-nav__link-text">
+              Reports
+            </span>
+          </a>
+        </li>
+        <li class="m-nav__separator">
+          -
+        </li>
+        <li class="m-nav__item">
+          <a href="" class="m-nav__link">
+            <span class="m-nav__link-text">
+              Revenue
+            </span>
+          </a>
+        </li>
+      </ul>-->
+    </div>
+    <div class="row">
+      <div style="margin-top: 5px">
+        <span style="font-size:20px; margin-right:7px">Warehouse: </span>
+      </div>
+      <div style="margin-top: 2px; margin-right: 7px; width: 300px;">
+        <ng-select-custom [Service]="WareHouseService" [Entity]="WareHouseSearchEntity.Name"
+                          [BindProperty]="'Name'"
+                          (Change)="WareHouseSearchEntity.Name = $event?.Name; Search(WareHouseSearchEntity)"
+                          (keyup.enter)="Search(WareHouseSearchEntity)"
+                          [IsSearch]="true" [Placeholder]="'Search...'"></ng-select-custom>
+      </div>
+      <button class="btn btn-outline-success m-btn m-btn--icon m-btn--outline-2x" (click)="Add({Id: 0, IsEdit: true, WareHouseId: WareHouseEntity.Id})">
+        <span>
+          <i class="fa fa-plus"></i>
+          <span>Add</span>
+        </span>
+      </button>
+    </div>
+    <!--<div style="padding-right: 15px;">
+      <button class="btn btn-outline-success m-btn m-btn--icon m-btn--outline-2x" (click)="Add({Id:0, IsEdit:true, Names:{}})">
+        <span>
+          <i class="fa fa-plus"></i>
+          <span>Add</span>
+        </span>
+      </button>
+    </div>-->
+  </div>
+</div>
+<!-- END: Subheader -->
+<!--BEGIN: Content-->
+<div class="m-content">
+  <div class="col-md-12" *ngIf="!IsAdding">
+    <div class="m-section">
+      <table class="table table-bordered m-table m-table--border-metal table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Mã hàng</th>
+            <th>Hàng hóa</th>
+            <th>Đơn vị</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
+            <th>Thành tiền</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search Warehouse..." />
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search Product..." />
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search Quantity..." />
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search Unit Price..." />
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search Unit Price..." />
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search Unit Price..." />
+            </td>
+            <td class="button-crud">
+              <div>
+                <button class="btn btn-brand m-btn m-btn--icon btn-sm m-btn--icon-only m-btn--pill">
+                  <i class="fa fa-search"></i>
+                </button>
+                <button class="btn btn-primary m-btn m-btn--icon btn-sm m-btn--icon-only  m-btn--pill">
+                  <i class="fa fa-refresh"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let ReceiptNoteEntity of Entities; index as i">
+            <td scope="row">{{i + 1}}</td>
+            <td>
+              <span *ngIf="!ReceiptNoteEntity.IsEdit">{{ReceiptNoteEntity.WareHouseEntity?.Name}}</span>
+              <ng-select [items]="WareHouseEntities"
+                         (ngModelChange)="ReceiptNoteEntity.WareHouseId=$event; GetProduct(ReceiptNoteEntity.WareHouseId)"
+                         bindLabel="Name"
+                         bindValue="Id"
+                         placeholder="Choose Warehouse..."
+                         [(ngModel)]="ReceiptNoteEntity.WareHouseId" *ngIf="ReceiptNoteEntity.IsEdit">
+              </ng-select>
+            </td>
+            <td>
+              <span *ngIf="!ReceiptNoteEntity.IsEdit">{{ReceiptNoteEntity.ProductEntity?.Code}}</span>
+              <ng-select [items]="InventoryEntities"
+                         bindLabel="ProductEntity.Code"
+                         bindValue="ProductId"
+                         placeholder="Choose Product..."
+                         [(ngModel)]="ReceiptNoteEntity.ProductId" *ngIf="ReceiptNoteEntity.IsEdit">
+              </ng-select>
+            </td>
+            <td>
+              <span *ngIf="!ReceiptNoteEntity.IsEdit">{{ReceiptNoteEntity.Quantity | number}}</span>
+              <input currencyMask [options]="{ prefix: '', precision: '0'  }" class="form-control" *ngIf="ReceiptNoteEntity.IsEdit" placeholder="Enter Quantity..." [(ngModel)]="ReceiptNoteEntity.Quantity" (ngModelChange)="ReceiptNoteEntity.Quantity = $event; ComputeTotal(ReceiptNoteEntity)" />
+            </td>
+            <td>
+              <span *ngIf="!ReceiptNoteEntity.IsEdit">{{ReceiptNoteEntity.UnitPrice | number}}</span>
+              <input currencyMask min="0" [options]="{ prefix: '', precision: '0'  }" class="form-control" *ngIf="ReceiptNoteEntity.IsEdit" placeholder="Enter UnitPrice..." [(ngModel)]="ReceiptNoteEntity.UnitPrice" (ngModelChange)="ReceiptNoteEntity.UnitPrice = $event; ComputeTotal(ReceiptNoteEntity)" />
+            </td>
+            <td>
+              <span *ngIf="!ReceiptNoteEntity.IsEdit">{{ReceiptNoteEntity.Total | number}}</span>
+              <input currencyMask min="0" [options]="{ prefix: '', precision: '0'  }" class="form-control" *ngIf="ReceiptNoteEntity.IsEdit" placeholder="Enter Total..." [(ngModel)]="ReceiptNoteEntity.Total" />
+            </td>
+            <td>
+              <span *ngIf="!ReceiptNoteEntity.IsEdit">{{ReceiptNoteEntity.Total | number}}</span>
+              <input currencyMask min="0" [options]="{ prefix: '', precision: '0'  }" class="form-control" *ngIf="ReceiptNoteEntity.IsEdit" placeholder="Enter Total..." [(ngModel)]="ReceiptNoteEntity.Total" />
+            </td>
+            <td class="button-crud">
+              <div *ngIf="!ReceiptNoteEntity.IsEdit">
+                <button class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                        data-toggle="m-tooltip" data-original-title="Edit" data-placement="left" data-skin="dark" (click)="Edit(ReceiptNoteEntity)">
+                  <i class="fa fa-pencil"></i>
+                </button>
+                <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                        data-toggle="m-tooltip" data-original-title="Delete" data-placement="right" data-skin="dark"
+                        mwlConfirmationPopover [popoverTitle]="'Are you sure?'" placement="top" (confirm)="Delete(ReceiptNoteEntity)" (cancel)="cancelClicked = true">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
+              <div *ngIf="ReceiptNoteEntity.IsEdit">
+                <button class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                        data-toggle="m-tooltip" data-original-title="Save" data-placement="left" data-skin="dark" (click)="Save(ReceiptNoteEntity)">
+                  <i class="fa fa-save"></i>
+                </button>
+                <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                        data-toggle="m-tooltip" data-original-title="Cancel" data-placement="right" data-skin="dark" (click)="Cancel(ReceiptNoteEntity)">
+                  <i class="fa fa-remove"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <app-paging [PagingModel]="PagingModel" [dot]="true" (onChanges)="Search(CategorySearchEntity)"></app-paging>
+  </div>
+</div>
+<!--END: Content-->

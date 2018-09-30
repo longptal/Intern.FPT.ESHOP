@@ -1,0 +1,158 @@
+﻿<#@ assembly name="EnvDte" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data.Entity.Design" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic"#>
+<#@ include file="Helper.ttinclude" once="true"#>
+<#@ include file="MultipleClassesGenerator.ttinclude" once="true"#>
+<#+
+	class EntityClassesGenerator : MultipleClassesGenerator
+    {
+        protected override string OutputFolderName
+        {
+            get { return "Entities"; }
+        }
+
+        protected override void GenerateFile(CodeClass modelClass)
+        {
+            string typeName       = modelClass.Name;
+            string entityTypeName = typeName + "Entity";
+
+            manager.StartNewFile(Path.ChangeExtension(entityTypeName, "cs"));
+
+
+            IEnumerable<CodeProperty> properties = Helper.GetProperties(modelClass.ProjectItem)
+               .Where(property => property.Name != "Cx");
+
+#>using EShop.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace EShop.Entities
+{
+    public class <#=entityTypeName #> : BaseEntity
+    {
+<#+
+            foreach (CodeProperty property in properties)
+            {
+                string propType = property.Type.CodeType.Name;
+                string propName = property.Name;
+
+                //Product Product => ProductEntity ProductEntity
+                if (IsModelType(propType))
+                {
+                    propType += "Entity";
+                    propName += "Entity";
+                }
+
+                //ICollection<Product> Products => List<ProductEntity> ProductEntities
+                if (propType == "ICollection")
+                {
+                    //ICollection<Product> abc => "Product"
+                    string innerType = Helper.GetGenericCollectionType(property.Type.AsFullName);
+
+                    propType = string.Format("List<{0}>", innerType + "Entity");
+                    propName = Helper.pluralizationService.Singularize(propName) + "Entities";
+                }
+
+
+#>        public <#=propType #> <#=propName #> { get; set; }
+<#+
+            }
+
+            //Constructors:
+#>
+
+        public <#=entityTypeName #>():base() { }
+
+        public <#=entityTypeName #>(<#=typeName #> <#=typeName #>, params object[] args) :base(<#=typeName #>)
+        {
+		    foreach(object arg in args)
+			{
+<#+
+            var possibleArgumentTypes = modelClass
+               .Children.OfType<CodeProperty>()
+               .Where(p => IsModelType(p.Type.CodeType.Name) ||
+                           p.Type.CodeType.Name == "ICollection" &&
+                           IsModelType(Helper.GetGenericCollectionType(p.Type.AsFullName)));
+
+            foreach (CodeProperty prop in possibleArgumentTypes)
+            {
+                var argBaseType = prop.Type.CodeType.Name;
+
+                var isCollection = argBaseType == "ICollection";
+
+                if (isCollection)
+                    argBaseType = Helper.GetGenericCollectionType(prop.Type.AsFullName);
+
+                var argType = isCollection ? "ICollection" + "<" + argBaseType + ">" : argBaseType;
+
+                var argVarName = prop.Name;
+
+                var argEntityName = argBaseType + "Entity";
+                var propertyName = isCollection
+                                       ? Helper.pluralizationService.Singularize(argVarName) + "Entities"
+                                       : argVarName + "Entity";
+
+
+                var argsToPass = modelCodeClasses
+                   .First(model => model.Name == argBaseType)
+                   .Children.OfType<CodeProperty>()
+                   .Where(p => IsModelType(p.Type.CodeType.Name) && p.Type.CodeType.Name != modelClass.Name);
+
+                var argStringToPass = string.Join(", ", argsToPass.Select(p => "model." + p.Name).Prepend("model"));
+
+                var propValue = isCollection
+                                    ? string.Format(@"{0}.Select(model => new {1}({2})).ToList()",
+                                                    argVarName,
+                                                    argEntityName,
+                                                    argStringToPass)
+                                    : "new " + argBaseType + "Entity(" + argVarName + ")";
+
+                /*Example:
+
+                if (arg is Category Category)
+                    CategoryEntity = new CategoryEntity(Category);
+
+                if (arg is ICollection<ProductValue> ProductValues)
+                    ProductValueEntities = ProductValues.Select(p => new ProductValueEntity(p, p.Attribute, p.Language)).ToList();
+                */
+
+#>                if (arg is <#= argType #> <#= argVarName #>)
+                    <#= propertyName #> = <#= propValue #>;				
+<#+
+            }
+#>			}
+        }
+    }
+
+    public class <#=typeName #>SearchEntity : FilterEntity
+    {
+<#+
+            var searchProperties = Helper.GetProperties(modelClass.ProjectItem)
+               .Where(property => property.Name != "Cx" &&
+                                  property.Type.CodeType.Name != "ICollection" &&
+                                  !IsModelType(property.Type.CodeType.Name));
+
+            foreach (CodeProperty property in searchProperties)
+            {
+                string propName = property.Name;
+                string propType = property.Type.CodeType.Name;
+                if (!propType.EndsWith("?"))
+                    propType = propType.ToLower() == "string" ? propType : propType + "?";
+#>        public <#=propType #> <#=propName #> { get; set; }
+<#+
+            } 
+#>
+    }
+}
+<#+
+        }
+
+        public EntityClassesGenerator(ITextTemplatingEngineHost host, IEnumerable<CodeClass> modelCodeClasses,
+                                      string                    projectPath) :
+            base(host, modelCodeClasses, projectPath) { }
+    }#>

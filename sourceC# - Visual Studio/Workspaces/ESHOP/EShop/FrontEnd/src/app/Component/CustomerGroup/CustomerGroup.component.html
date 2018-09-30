@@ -1,0 +1,105 @@
+<!-- BEGIN: Subheader -->
+<div class="m-subheader" appunwraptag="">
+  <div class="d-flex align-items-center border-title">
+    <div class="mr-auto">
+      <h3 class="m-subheader__title">
+        CustomerGroup Management
+      </h3>
+    </div>
+    <div>
+      <button class="btn btn-outline-success m-btn m-btn--icon m-btn--outline-2x" (click)="Add({Id:0, IsEdit: true})">
+        <span>
+          <i class="fa fa-plus"></i>
+          <span>Add</span>
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+<!-- END: Subheader -->
+<!--BEGIN: Content-->
+<div class="m-content">
+  <div class="col-md-12">
+    <div class="m-section">
+      <table class="table table-bordered m-table m-table--border-metal table-hover m-table--head-bg-success">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>IsActive</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-center">#</td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search Code..." [(ngModel)]="CustomerGroupSearchEntity.Code" />
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search Name..." [(ngModel)]="CustomerGroupSearchEntity.Name" />
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search Description..." [(ngModel)]="CustomerGroupSearchEntity.Description" />
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="Search IsActive..." [(ngModel)]="CustomerGroupSearchEntity.IsActive" />
+            </td>
+            <td class="button-crud">
+              <div>
+                <button class="btn btn-brand m-btn m-btn--icon btn-sm m-btn--icon-only m-btn--pill" (click)="Search(CustomerGroupSearchEntity, false)">
+                  <i class="fa fa-search"></i>
+                </button>
+                <button class="btn btn-primary m-btn m-btn--icon btn-sm m-btn--icon-only  m-btn--pill" (click)="Search(CustomerGroupSearchEntity, true)">
+                  <i class="fa fa-refresh"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let CustomerGroupEntity of Entities; index as i">
+            <td scope="row" class="text-center">{{i + 1}}</td>
+            <td>
+              <div *ngIf="!CustomerGroupEntity.IsEdit">{{CustomerGroupEntity.Code}}</div>
+              <input class="form-control" *ngIf="CustomerGroupEntity.IsEdit" placeholder="Enter Code..." [(ngModel)]="CustomerGroupEntity.Code" />
+            </td>
+            <td>
+              <div *ngIf="!CustomerGroupEntity.IsEdit">{{CustomerGroupEntity.Name}}</div>
+              <input class="form-control" *ngIf="CustomerGroupEntity.IsEdit" placeholder="Enter Name..." [(ngModel)]="CustomerGroupEntity.Name" />
+            </td>
+            <td>
+              <div *ngIf="!CustomerGroupEntity.IsEdit">{{CustomerGroupEntity.Description}}</div>
+              <input class="form-control" *ngIf="CustomerGroupEntity.IsEdit" placeholder="Enter Description..." [(ngModel)]="CustomerGroupEntity.Description" />
+            </td>
+            <td>
+              <input class="form-control" *ngIf="!CustomerGroupEntity.IsEdit" type="checkbox" disabled placeholder="Enter IsActive..." [(ngModel)]="CustomerGroupEntity.IsActive" />
+              <input class="form-control" *ngIf="CustomerGroupEntity.IsEdit" type="checkbox" placeholder="Enter IsActive..." [(ngModel)]="CustomerGroupEntity.IsActive" />
+            </td>
+            <td class="button-crud">
+              <div *ngIf="!CustomerGroupEntity.IsEdit">
+                <button class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="Edit(CustomerGroupEntity)">
+                  <i class="fa fa-pencil"></i>
+                </button>
+                <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                        mwlConfirmationPopover [popoverTitle]="'Are you sure?'" placement="top" (confirm)="Delete(CustomerGroupEntity)" (cancel)="cancelClicked = true">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
+              <div *ngIf="CustomerGroupEntity.IsEdit">
+                <button class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="Save(CustomerGroupEntity)">
+                  <i class="fa fa-save"></i>
+                </button>
+                <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="Cancel(CustomerGroupEntity)">
+                  <i class="fa fa-remove"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<app-paging [PagingModel]="PagingModel" [dot]="true" (onChanges)="Search()"></app-paging>
+<!--END: Content-->

@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2003
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EShop", "EShop\EShop.csproj", "{D8A48E5A-24A2-4014-AB02-155F6D3A64DC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EShop.Tests", "EShop.Tests\EShop.Tests.csproj", "{9BA84AF8-4811-4B10-A6EF-A253D22F8A6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGen", "CodeGen\CodeGen.csproj", "{38A97BC4-B3CA-4561-98DB-1D3734DE0CDE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D8A48E5A-24A2-4014-AB02-155F6D3A64DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8A48E5A-24A2-4014-AB02-155F6D3A64DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8A48E5A-24A2-4014-AB02-155F6D3A64DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8A48E5A-24A2-4014-AB02-155F6D3A64DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BA84AF8-4811-4B10-A6EF-A253D22F8A6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BA84AF8-4811-4B10-A6EF-A253D22F8A6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BA84AF8-4811-4B10-A6EF-A253D22F8A6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BA84AF8-4811-4B10-A6EF-A253D22F8A6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38A97BC4-B3CA-4561-98DB-1D3734DE0CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38A97BC4-B3CA-4561-98DB-1D3734DE0CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F17DC962-5841-4193-BC2D-8DD3D417401E}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs2015.ho.fpt.vn/tfs/tfs2015
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = EShop\\EShop.csproj
+		SccProjectName1 = EShop
+		SccLocalPath1 = EShop
+		SccProjectUniqueName2 = EShop.Tests\\EShop.Tests.csproj
+		SccProjectName2 = EShop.Tests
+		SccLocalPath2 = EShop.Tests
+		SccProjectUniqueName3 = CodeGen\\CodeGen.csproj
+		SccProjectName3 = CodeGen
+		SccLocalPath3 = CodeGen
+	EndGlobalSection
+EndGlobal

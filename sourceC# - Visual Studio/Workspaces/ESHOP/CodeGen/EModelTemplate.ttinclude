@@ -1,0 +1,132 @@
+﻿<#@ assembly name="EnvDte" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data.Entity.Design" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic"#>
+<#@ include file="Helper.ttinclude" once="true"#>
+<#@ include file="MultipleClassesGenerator.ttinclude" once="true"#>
+<#+
+	class EModelClassesGenerator : MultipleClassesGenerator
+    {
+        protected override string OutputFolderName
+        {
+            get { return "EModels"; }
+        }
+
+        public EModelClassesGenerator(ITextTemplatingEngineHost host,
+                                      IEnumerable<CodeClass>    modelCodeClasses,
+                                      string                    projectPath) :
+            base(host, modelCodeClasses, projectPath) { }
+
+
+        protected override void GenerateFile(CodeClass modelClass)
+        {
+            string typeName       = modelClass.Name;
+            string entityTypeName = typeName + "Entity";
+
+            manager.StartNewFile(Path.ChangeExtension(typeName, "cs"));
+
+
+            IEnumerable<CodeProperty> collections = Helper.GetProperties(modelClass.ProjectItem)
+               .Where(property =>
+                          property.Type.CodeType.Name == "ICollection")
+               .ToList();
+#>using EShop.Entities;
+using System;
+using System.Collections.Generic;
+
+namespace EShop.Models
+{
+    public partial class <#=typeName #> : Base
+    {
+<#+
+            //Find existing default constructor and add one if not exist
+            var contrustors = modelClass.Children.Cast<CodeElement>()
+               .Where(element => element.Name == typeName &&
+                                 element.Kind == vsCMElement.vsCMElementFunction);
+
+            if (!contrustors.Any())
+            {
+#>
+        public <#=typeName #> () : base(){}
+<#+
+            }
+
+
+            //Entity converter contructor:
+#>
+
+        public <#=typeName #> (<#=entityTypeName #> <#=entityTypeName #>) : base(<#=entityTypeName #>)
+        {
+<#+
+        foreach (CodeProperty collection in collections)
+            {
+                var colectionName       = collection.Name; //Packs
+                var colectionTypeName   = Helper.GetGenericCollectionType(collection.Type.AsFullName); //Pack
+                var colectionEntityName = colectionTypeName + "Entity"; //PackEntity
+                var entityCollectionName =
+                    Helper.pluralizationService.Singularize(colectionName) + "Entities"; //PackEntities
+
+                var collectionElementVariableName = Helper.pluralizationService.Singularize(entityCollectionName);
+
+                var idFieldName = modelCodeClasses
+                                     .First(m => m.Name == colectionTypeName)
+                                     .Children.OfType<CodeProperty>()
+                                     .First(p => p.Type.CodeType.Name == typeName)
+                                     .Name + "Id";
+
+                /* Example:
+                
+                if (EmployeeEntity.WarehouseEntities != null)
+                {
+                    this.WareHouses = new HashSet<WareHouse>();
+                    foreach (WareHouseEntity WarehouseEntity in EmployeeEntity.WarehouseEntities)
+                    {
+					    WarehouseEntity.StockeeperId = EmployeeEntity.Id;
+                        this.WareHouses.Add(new WareHouse(WarehouseEntity));
+                    }
+                }*/
+#>
+
+			if (<#=entityTypeName #>.<#=entityCollectionName #> != null)
+            {
+                this.<#=colectionName #> = new HashSet<<#=colectionTypeName #>>();
+                foreach (<#=colectionEntityName #> <#=collectionElementVariableName #> in <#=entityTypeName #>.<#=entityCollectionName #>)
+                {
+					<#=collectionElementVariableName #>.<#=idFieldName #> = <#=entityTypeName #>.Id;
+                    this.<#=colectionName #>.Add(new <#=colectionTypeName #>(<#=collectionElementVariableName #>));
+                }
+            }
+<#+
+            }
+#>		}
+
+        public override bool Equals(Base other)
+        {		
+<#+
+            var ownId = modelClass.Children.OfType<CodeProperty>().FirstOrDefault(p => p.Name == "Id");
+            var identifiers = ownId != null
+                                  ? new[] {ownId}
+                                  : modelClass.Children.OfType<CodeProperty>()
+                                     .Where(p => p.Type.CodeType.Name == "Guid");
+
+
+            var comparers = identifiers.Select(id => id.Name + ".Equals(" + typeName + "." + id.Name + ")");
+
+#>
+            if (other == null) return false;
+            if (other is <#=typeName #> <#=typeName #>)
+            {
+                return <#= string.Join(" && ", comparers) #>;
+            }
+
+            return false;
+        }
+    }
+}
+<#+
+        }
+    }
+#>

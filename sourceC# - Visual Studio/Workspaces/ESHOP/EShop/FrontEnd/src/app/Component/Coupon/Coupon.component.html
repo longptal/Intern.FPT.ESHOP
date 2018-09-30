@@ -1,0 +1,125 @@
+<!-- BEGIN: Subheader -->
+<div class="m-subheader" appunwraptag="">
+    <div class="d-flex align-items-center border-title">
+        <div class="mr-auto">
+            <h3 class="m-subheader__title">
+                Coupon Management
+            </h3>
+            <!--<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+                <li class="m-nav__item m-nav__item--home">
+                    <a href="#" class="m-nav__link m-nav__link--icon">
+                        <i class="m-nav__link-icon la la-home"></i>
+                    </a>
+                </li>
+                <li class="m-nav__separator">
+                    -
+                </li>
+                <li class="m-nav__item">
+                    <a href="" class="m-nav__link">
+                        <span class="m-nav__link-text">
+                            Reports
+                        </span>
+                    </a>
+                </li>
+                <li class="m-nav__separator">
+                    -
+                </li>
+                <li class="m-nav__item">
+                    <a href="" class="m-nav__link">
+                        <span class="m-nav__link-text">
+                            Revenue
+                        </span>
+                    </a>
+                </li>
+            </ul>-->
+        </div>
+        <div>
+            <button class="btn btn-outline-success m-btn m-btn--icon m-btn--outline-2x" (click)="Add({Id:0, IsEdit: true})">
+                <span>
+                    <i class="fa fa-plus"></i>
+                    <span>Add</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- END: Subheader -->
+
+<!--BEGIN: Content-->
+<div class="m-content">
+    <div class="col-md-12">
+        <div class="m-section">
+            <table class="table table-bordered m-table m-table--border-metal table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Code</th>
+                        <th>StartDate</th>
+                        <th>EndDate</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                  <tr>
+                    <td class="text-center">#</td>
+                    <td>
+                      <input type="text" class="form-control" placeholder="Search Code..." [(ngModel)]="CouponSearchEntity.Code"/>
+                    </td>
+                    <td>
+                      <datetime [placeholder]="'Start Date...'" [(ngModel)]="CouponSearchEntity.StartDate"></datetime>
+                    </td>
+                    <td>
+                      <datetime [placeholder]="'End Date...'" [(ngModel)]="CouponSearchEntity.EndDate"></datetime>
+                    </td>
+                    <td class="button-crud">
+                      <div>
+                        <button class="btn btn-brand m-btn m-btn--icon btn-sm m-btn--icon-only m-btn--pill" (click)="Search(CouponSearchEntity, false)">
+                          <i class="fa fa-search"></i>
+                        </button>
+                        <button class="btn btn-primary m-btn m-btn--icon btn-sm m-btn--icon-only  m-btn--pill" (click)="Search(CouponSearchEntity, true)">
+                          <i class="fa fa-refresh"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                    <tr *ngFor="let CouponEntity of Entities; index as i">
+                        <td scope="row" class="text-center">{{i + 1}}</td>
+                        <td>
+                            <div *ngIf="!CouponEntity.IsEdit">{{CouponEntity.Code}}</div>
+                            <input class="form-control" *ngIf="CouponEntity.IsEdit" placeholder="Enter Code..." [(ngModel)]="CouponEntity.Code"/>
+                        </td>
+                        <td>
+                            <div *ngIf="!CouponEntity.IsEdit">{{CouponEntity.StartDate | date: 'dd/MM/yyyy'}}</div>
+                            <datetime *ngIf="CouponEntity.IsEdit" [placeholder]="'Start Date...'" [(ngModel)]="CouponEntity.StartDate"></datetime>
+                        </td>
+                        <td>
+                            <div *ngIf="!CouponEntity.IsEdit">{{CouponEntity.EndDate | date: 'dd/MM/yyyy'}}</div>
+                            <datetime *ngIf="CouponEntity.IsEdit" [placeholder]="'End Date...'" [(ngModel)]="CouponEntity.EndDate"></datetime>
+                        </td>
+                        <td class="button-crud">
+                            <div *ngIf="!CouponEntity.IsEdit">
+                                <button class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="Edit(CouponEntity)">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                                   mwlConfirmationPopover [popoverTitle]="'Are you sure?'" placement="top" (confirm)="Delete(CouponEntity)" (cancel)="cancelClicked = true">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                            <div *ngIf="CouponEntity.IsEdit">
+                                <button class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="Save(CouponEntity)">
+                                  <i class="fa fa-save"></i>
+                                </button>
+                                <button  class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="Cancel(CouponEntity)">
+                                    <i class="fa fa-remove"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<app-paging [PagingModel]="PagingModel" [dot]="true" (onChanges)="Search()"></app-paging>
+<!--END: Content-->

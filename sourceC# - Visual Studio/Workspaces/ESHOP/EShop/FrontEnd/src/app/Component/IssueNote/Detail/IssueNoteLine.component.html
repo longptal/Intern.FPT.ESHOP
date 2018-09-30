@@ -1,0 +1,56 @@
+<!--BEGIN: Content-->
+<div class="m-content">
+  <div class="col-md-12">
+    <div class="m-section">
+      <table class="table table-bordered m-table m-table--border-metal table-hover ">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Mã Hàng</th>
+            <th>Tên hàng hóa</th>
+            <th>Kho</th>
+            <th>Đơn vị</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
+            <th>Thành tiền</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td scope="row">{{i + 1}}</td>
+            <td>
+              <div *ngIf="!IssueNoteLineEntity.IsEdit">{{IssueNoteLineEntity.ProductEntity.Code}}</div>
+              <input *ngIf="IssueNoteLineEntity.IsEdit" class="form-control" placeholder="Enter Code..." [(ngModel)]="IssueNoteLineEntity.ProductEntity.Code" />
+            </td>
+            <td>
+              <div *ngIf="!IssueNoteLineEntity.IsEdit">{{IssueNoteLineEntity.ProductEntity.Name}}</div>
+
+            </td>
+            <td>
+              <div *ngIf="!IssueNoteLineEntity.IsEdit">{{IssueNoteLineEntity.WareHouseEntity.Name}}</div>
+              <input *ngIf="IssueNoteLineEntity.IsEdit" class="form-control" placeholder="Enter Code..." [(ngModel)]="IssueNoteLineEntity.WareHouseEntity.Name" />
+            </td>
+            <td>
+              <div *ngIf="!IssueNoteLineEntity.IsEdit">{{IssueNoteLineEntity.UnitPrice}}</div>
+              <input class="form-control" *ngIf="IssueNoteLineEntity.IsEdit" placeholder="Enter Code..." [(ngModel)]="IssueNoteLineEntity.UnitPrice" />
+            </td>
+            <td>
+              <div *ngIf="!IssueNoteLineEntity.IsEdit">{{IssueNoteLineEntity.Quantity}}</div>
+              <input class="form-control" *ngIf="ReceiptNoteLineEntity.IsEdit" placeholder="Enter Code..." [(ngModel)]="IssueNoteLineEntity.Quantity" />
+            </td>
+            <td>
+              <div *ngIf="!IssueNoteLineEntity.IsEdit">{{IssueNoteLineEntity.Price}}</div>
+              <input class="form-control" *ngIf="IssueNoteLineEntity.IsEdit" placeholder="Enter Code..." [(ngModel)]="IssueNoteLineEntity.Price" />
+            </td>
+          </tr>
+          <tr>
+            <td colspan="8">
+              <a class="addnewrow" style=""><i class="fa fa-plus"></i> Add new row</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!--END: Content-->

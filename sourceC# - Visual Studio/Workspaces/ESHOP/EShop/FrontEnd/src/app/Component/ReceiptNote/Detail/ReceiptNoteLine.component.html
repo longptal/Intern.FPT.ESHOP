@@ -1,0 +1,51 @@
+<!--BEGIN: Content-->
+<div class="m-content">
+  <div class="col-md-12">
+    <div class="m-section">
+      <table class="table table-bordered m-table m-table--border-metal table-hover ">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Mã Hàng</th>
+            <th>Tên hàng hóa</th>
+            <th>Đơn vị</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
+            <!--th>Thành tiền</th>-->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ReceiptNoteLineEntity of Entities; index as i">
+            <td scope="row">{{i + 1}}</td>
+            <td>
+              <div *ngIf="!ReceiptNoteLineEntity.IsEdit">{{ReceiptNoteLineEntity.ProductEntity.Code}}</div>
+              <input *ngIf="ReceiptNoteLineEntity.IsEdit" class="form-control" placeholder="Enter Code..." [(ngModel)]="ReceiptNoteLineEntity.ProductEntity.Code" />
+            </td>
+            <td>
+              <div *ngIf="!ReceiptNoteLineEntity.IsEdit">{{ReceiptNoteLineEntity.ProductEntity.Name}}</div>
+              
+            </td>
+            <td>
+              <div *ngIf="!ReceiptNoteLineEntity.IsEdit">{{ReceiptNoteLineEntity.UnitPrice}}</div>
+              <input class="form-control" *ngIf="ReceiptNoteLineEntity.IsEdit" placeholder="Enter Code..." [(ngModel)]="ReceiptNoteLineEntity.UnitPrice" />
+            </td>
+            <td>
+              <div *ngIf="!ReceiptNoteLineEntity.IsEdit">{{ReceiptNoteLineEntity.Quantity}}</div>
+              <input class="form-control" *ngIf="ReceiptNoteLineEntity.IsEdit" placeholder="Enter Code..." [(ngModel)]="ReceiptNoteLineEntity.Quantity" />
+            </td>
+            <td>
+              <div *ngIf="!ReceiptNoteLineEntity.IsEdit">{{ReceiptNoteLineEntity.Price}}</div>
+              <input class="form-control" *ngIf="ReceiptNoteLineEntity.IsEdit" placeholder="Enter Code..." [(ngModel)]="ReceiptNoteLineEntity.Price" />
+            </td>
+          </tr>
+          <tr>
+            <td colspan="8">
+              <a class="addnewrow" style="" (click)="AddNewRow()"><i class="fa fa-plus" ></i> Add new row</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!--END: Content-->

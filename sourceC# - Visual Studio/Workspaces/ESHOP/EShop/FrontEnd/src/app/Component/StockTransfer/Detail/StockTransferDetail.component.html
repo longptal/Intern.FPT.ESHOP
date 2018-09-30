@@ -1,0 +1,103 @@
+<!-- BEGIN: Subheader -->
+<div class="m-subheader" appunwraptag="">
+  <div class="d-flex align-items-center border-title">
+    <div class="mr-auto">
+      <h3 class="m-subheader__title">
+        ReceiptNote Management
+      </h3>
+    </div>
+    <div>
+      <!--<button *ngIf="!IsAdding" class="btn btn-outline-success m-btn m-btn--icon m-btn--outline-2x" (click)="AddReceiptNote()">
+        <span>
+          <i class="fa fa-plus"></i>
+          <span>Add</span>
+        </span>
+      </button>-->
+    </div>
+  </div>
+</div>
+<!-- END: Subheader -->
+<!--BEGIN: Content-->
+<div class="m-content">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="">
+        <p style="margin-bottom: 0">Phiếu nhập số:</p>
+        <input type="text" class="form-control" style="width: 100%" />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="">
+        <p style="margin-bottom: 0">Ngày chứng từ:</p>
+        <input type="text" class="form-control" style="width: 100%" />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="">
+        <p style="margin-bottom: 0">Ngày hệ thống:</p>
+        <input type="text" class="form-control" style="width: 100%" />
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="">
+        <p style="margin-bottom: 0">Nhà cung cấp:</p>
+        <input type="text" class="form-control" style="width: 100%" />
+        
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="">
+        <p style="margin-bottom: 0">Mã NCC:</p>
+        <input type="text" class="form-control" style="width: 100%" />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="">
+        <p style="margin-bottom: 0">Mã số thuế:</p>
+        <input type="text" class="form-control" style="width: 100%" />
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="">
+        <p style="margin-bottom: 0">Địa chỉ:</p>
+        <input type="text" class="form-control" style="width: 100%" />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="">
+        <p style="margin-bottom: 0">Điện thoại:</p>
+        <input type="text" class="form-control" style="width: 100%" />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="">
+        <p style="margin-bottom: 0">Diễn giải:</p>
+        <input type="text" class="form-control" style="width: 100%" />
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="">
+      <p style="margin-bottom: 0">Người giao:</p>
+      <input type="text" class="form-control" style="width: 100%" />
+    </div>
+  </div>
+  <app-StockTransferLine></app-StockTransferLine>
+  <div class="row">
+    <div class="col-sm-4 col-md-4 col-lg-4"></div>
+    <div class="col-sm-4 col-md-4 col-lg-4"></div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+      <div class="ui right aligned category search" style="margin-bottom: 17px; float: right">
+        <button class="btn btn-success" style="margin-right:10px;"><i class="fa fa-check"></i> Gửi</button>
+        <button class="btn btn-info" style="margin-right: 10px"><i class="fa fa-print"> In phiếu</i></button>
+        <button class="btn btn-danger" style="margin-right:10px;"><i class="fa fa-times"></i> Hủy</button>
+        <button class="btn btn-warning" style="color: white"><i class="fa fa-pencil"></i> Nhập lại</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--END: Content-->

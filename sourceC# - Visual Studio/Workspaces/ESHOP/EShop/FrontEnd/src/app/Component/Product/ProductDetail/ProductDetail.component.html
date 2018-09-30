@@ -1,0 +1,386 @@
+<!-- BEGIN: Subheader -->
+<div class="m-subheader" appunwraptag="">
+  <div class="d-flex align-items-center border-title">
+    <div class="mr-auto">
+      <h3 class="m-subheader__title">
+        ProductDetail Management
+      </h3>
+      <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
+        <li class="m-nav__item m-nav__item--home">
+          <a href="#" class="m-nav__link m-nav__link--icon">
+            <i class="m-nav__link-icon la la-home"></i>
+          </a>
+        </li>
+        <li class="m-nav__separator">
+          -
+        </li>
+        <li class="m-nav__item">
+          <a href="" class="m-nav__link">
+            <span class="m-nav__link-text">
+              Reports
+            </span>
+          </a>
+        </li>
+        <li class="m-nav__separator">
+          -
+        </li>
+        <li class="m-nav__item">
+          <a href="" class="m-nav__link">
+            <span class="m-nav__link-text">
+              Revenue
+            </span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- END: Subheader -->
+<div class="m-content">
+  <div class="col-md-12">
+    <div class="m-section" style="margin-top: 1.5rem">
+      <div class="row">
+        <div class="col-md-12">
+          <!--begin::Portlet-->
+          <div class="m-portlet">
+            <div class="m-portlet__head header-section modify-header-porlet">
+              <div class="m-portlet__head-caption">
+                <div class="m-portlet__head-title">
+                  <span class="m-portlet__head-icon m--hide">
+                    <i class="la la-gear"></i>
+                  </span>
+                  <h3 class="m-portlet__head-text white-text">
+                    Product Section
+                  </h3>
+                </div>
+                <span class="icon-toogle" (click)="ToogleProduct = !ToogleProduct">
+                  <i class="fa fa-angle-{{ToogleProduct ? 'down' : 'right'}} font-white fa-2x"></i>
+                </span>
+              </div>
+            </div>
+            <!--begin::Form-->
+            <div class="m-portlet__body modify-body-porlet" *ngIf="ToogleProduct">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="m--margin-top-10">
+                    <span class="header-section-group">Product Information: </span>
+                  </div>
+                  <table class="table table-bordered m-table m-table--border-metal table-hover m-table--head-bg-success">
+                    <thead>
+                      <tr>
+                        <th>Code</th>
+                        <th>Category</th>
+                        <th>Unit</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <input class="form-control" placeholder="Enter Code..." [(ngModel)]="ProductDetailEntity.Code" [ngModelOptions]="{standalone: true}" />
+                        </td>
+                        <td>
+                          <ng-select [items]="CategoryEntities"
+                                     bindLabel="Code"
+                                     bindValue="Id"
+                                     placeholder="Choose Category..."
+                                     [(ngModel)]="ProductDetailEntity.CategoryId" [ngModelOptions]="{standalone: true}">
+                          </ng-select>
+                        </td>
+                        <td>
+                          <input class="form-control" placeholder="Enter Unit..." [(ngModel)]="ProductDetailEntity.Unit" [ngModelOptions]="{standalone: true}" />
+                        </td>
+                        <td class="text-center">
+                          <div>
+                            <button class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="SaveProductDetail(ProductDetailEntity)">
+                              <i class="fa fa-save"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!--<div class="row">
+                  <div class="m--margin-top-10 fullwidth">
+                    <span class="header-section-group">Tax Information: </span>
+                    <button class="btn btn-outline-success m-btn m-btn--icon m-btn--outline-2x pull-right" (click)="AddTax()">
+                      <span>
+                        <i class="fa fa-plus"></i>
+                        <span>Add Tax</span>
+                      </span>
+                    </button>
+                  </div>
+                  <table class="table table-bordered m-table m-table--border-metal table-hover m-table--head-bg-success">
+                    <thead>
+                      <tr>
+                        <th class="text-center">#</th>
+                        <th>Code</th>
+                        <th>Percentage</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let TaxEntity of TaxEntities; let i = index">
+                        <td class="text-center">{{i + 1}}</td>
+                        <td>
+                          <span *ngIf="!TaxEntity.IsEdit">{{TaxEntity.Code}}</span>
+                          <input *ngIf="TaxEntity.IsEdit" class="form-control" placeholder="Enter Code..." [(ngModel)]="TaxEntity.Code" [ngModelOptions]="{standalone: true}" />
+                        </td>
+                        <td>
+                          <span *ngIf="!TaxEntity.IsEdit">{{TaxEntity.Percentage | number}}</span>
+                          <input *ngIf="TaxEntity.IsEdit" type="number" class="form-control" placeholder="Enter Percentage..." [(ngModel)]="TaxEntity.Percentage" [ngModelOptions]="{standalone: true}" />
+                        </td>
+                        <td class="text-center">
+                          <div *ngIf="!TaxEntity.IsEdit">
+                            <button class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="EditTax(TaxEntity)">
+                              <i class="fa fa-pencil"></i>
+                            </button>
+                            <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                                    mwlConfirmationPopover [popoverTitle]="'Are you sure?'" placement="top" (confirm)="DeleteTax(TaxEntity)" (cancel)="cancelClicked = true">
+                              <i class="fa fa-trash"></i>
+                            </button>
+                          </div>
+                          <div *ngIf="TaxEntity.IsEdit">
+                            <button class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="SaveTax(TaxEntity)">
+                              <i class="fa fa-save"></i>
+                            </button>
+                            <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="CancelTax(TaxEntity)">
+                              <i class="fa fa-remove"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>-->
+                <div class="row">
+                  <div class="m--margin-top-10 fullwidth">
+                    <span class="header-section-group">Pack Information: </span>
+                    <button class="btn btn-outline-success m-btn m-btn--icon m-btn--outline-2x pull-right" (click)="AddPack()">
+                      <span>
+                        <i class="fa fa-plus"></i>
+                        <span>Add Pack</span>
+                      </span>
+                    </button>
+                  </div>
+                  <table class="table table-bordered m-table m-table--border-metal table-hover m-table--head-bg-success">
+                    <thead>
+                      <tr>
+                        <th class="text-center">#</th>
+                        <th>UnitPrice</th>
+                        <th>Quantity</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let PackEntity of PackEntities; let i = index">
+                        <td class="text-center">{{i + 1}}</td>
+                        <td>
+                          <span *ngIf="!PackEntity.IsEdit">{{PackEntity.UnitPrice}}</span>
+                          <input *ngIf="PackEntity.IsEdit" class="form-control" placeholder="Enter UnitPrice..." [(ngModel)]="PackEntity.UnitPrice" [ngModelOptions]="{standalone: true}" />
+                        </td>
+                        <td>
+                          <span *ngIf="!PackEntity.IsEdit">{{PackEntity.Quantity}}</span>
+                          <input *ngIf="PackEntity.IsEdit" class="form-control" placeholder="Enter Quantity..." [(ngModel)]="PackEntity.Quantity" [ngModelOptions]="{standalone: true}" />
+                        </td>
+                        <td class="text-center">
+                          <div *ngIf="!PackEntity.IsEdit">
+                            <button class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="EditPack(PackEntity)">
+                              <i class="fa fa-pencil"></i>
+                            </button>
+                            <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                                    mwlConfirmationPopover [popoverTitle]="'Are you sure?'" placement="top" (confirm)="DeletePack(PackEntity)" (cancel)="cancelClicked = true">
+                              <i class="fa fa-trash"></i>
+                            </button>
+                          </div>
+                          <div *ngIf="PackEntity.IsEdit">
+                            <button class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="SavePack(PackEntity)">
+                              <i class="fa fa-save"></i>
+                            </button>
+                            <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="CancelPack(PackEntity)">
+                              <i class="fa fa-remove"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="row">
+                  <div class="m--margin-top-10 fullwidth">
+                    <span class="header-section-group">Discount Information: </span>
+                    <button class="btn btn-outline-success m-btn m-btn--icon m-btn--outline-2x pull-right" (click)="AddDiscount()">
+                      <span>
+                        <i class="fa fa-plus"></i>
+                        <span>Add Discount</span>
+                      </span>
+                    </button>
+                  </div>
+                  <table class="table table-bordered m-table m-table--border-metal table-hover m-table--head-bg-success">
+                    <thead>
+                      <tr>
+                        <th class="text-center">#</th>
+                        <th>Min</th>
+                        <th>Max</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let DiscountEntity of DiscountEntities; let i = index">
+                        <td class="text-center">
+                          {{i + 1}}
+                        </td>
+                        <td>
+                          <span *ngIf="!DiscountEntity.IsEdit">{{DiscountEntity.Max}}</span>
+                          <input *ngIf="DiscountEntity.IsEdit" class="form-control" placeholder="Enter Max..." [(ngModel)]="DiscountEntity.Max" [ngModelOptions]="{standalone: true}" />
+                        </td>
+                        <td>
+                          <span *ngIf="!DiscountEntity.IsEdit">{{DiscountEntity.Min}}</span>
+                          <input *ngIf="DiscountEntity.IsEdit" class="form-control" placeholder="Enter Min..." [(ngModel)]="DiscountEntity.Min" [ngModelOptions]="{standalone: true}" />
+                        </td>
+                        <td class="text-center">
+                          <div *ngIf="!DiscountEntity.IsEdit">
+                            <button class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="EditDiscount(DiscountEntity)">
+                              <i class="fa fa-pencil"></i>
+                            </button>
+                            <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                                    mwlConfirmationPopover [popoverTitle]="'Are you sure?'" placement="top" (confirm)="DeleteDiscount(DiscountEntity)" (cancel)="cancelClicked = true">
+                              <i class="fa fa-trash"></i>
+                            </button>
+                          </div>
+                          <div *ngIf="DiscountEntity.IsEdit">
+                            <button class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="SaveDiscount(DiscountEntity)">
+                              <i class="fa fa-save"></i>
+                            </button>
+                            <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="CancelDiscount(DiscountEntity)">
+                              <i class="fa fa-remove"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="row">
+                  <div class="m--margin-top-10 fullwidth">
+                    <span class="header-section-group">Image: </span>
+                    <FileBrowser class="pull-right" (finished)="LoadImage($event)"></FileBrowser>
+                  </div>
+                  <table class="table table-bordered m-table m-table--border-metal table-hover m-table--head-bg-success">
+                    <thead>
+                      <tr>
+                        <th class="text-center" width="5%">#</th>
+                        <th width="20%">Path</th>
+                        <th width="50%">Image</th>
+                        <th width="15%">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let FileEntity of ProducPictureEntities; let i = index">
+                        <td class="text-center">
+                          {{i + 1}}
+                        </td>
+                        <td>
+                          <span>{{FileEntity.Path}}</span>
+                        </td>
+                        <td>
+                          <img [src]="FileEntity.Path" alt="Smiley face">
+                        </td>
+                        <td class="text-center">
+                          <div>
+                            <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                                    mwlConfirmationPopover [popoverTitle]="'Are you sure?'" placement="top" (confirm)="DeleteImage(FileEntity)" (cancel)="cancelClicked = true">
+                              <i class="fa fa-trash"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!--end::Form-->
+          </div>
+          <!--end::Portlet-->
+          <!--begin::Portlet-->
+          <div class="m-portlet">
+            <div class="m-portlet__head header-section modify-header-porlet">
+              <div class="m-portlet__head-caption">
+                <div class="m-portlet__head-title">
+                  <span class="m-portlet__head-icon m--hide">
+                    <i class="la la-gear"></i>
+                  </span>
+                  <h3 class="m-portlet__head-text white-text">
+                    Product Value Section
+                  </h3>
+                </div>
+                <span class="icon-toogle" (click)="ToogleProductValue = !ToogleProductValue">
+                  <i class="fa fa-angle-{{ToogleProductValue ? 'down' : 'right'}} font-white fa-2x"></i>
+                </span>
+              </div>
+            </div>
+            <div class="m-portlet__body modify-body-porlet">
+              <div class="col-md-12">
+                <ul class="nav nav-tabs">
+                  <li class="nav-item" *ngFor="let Language of LanguageEntities">
+                    <a class="nav-link modify-fontsize" [ngClass]="{'active': Language.IsActive}" (click)="ChangeLanguage(Language)">{{Language.Code}}</a>
+                  </li>
+                </ul>
+                <div>
+                  <table class="table table-bordered m-table m-table--border-metal table-hover m-table--head-bg-success">
+                    <thead>
+                      <tr>
+                        <th width="5%">#</th>
+                        <th width="12%">Code</th>
+                        <th width="12%">Name</th>
+                        <th width="64%">Value</th>
+                        <th width="11%">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let ProductValueEntity of ProductValueEntities; let i = index">
+                        <td class="text-center">
+                          {{i + 1}}<br />
+                        </td>
+                        <td>
+                          <span>{{ProductValueEntity.Code}}</span>
+                        </td>
+                        <td>
+                          <span>{{ProductValueEntity.Name}}</span>
+                        </td>
+                        <td>
+                          <div [innerHTML]="ProductValueEntity.Value" *ngIf="!ProductValueEntity.IsEdit"></div>
+                          <div>
+                            <quill-editor [(ngModel)]="ProductValueEntity.Value" [options]="editorOptions" [ngModelOptions]="{standalone: true}" *ngIf="ProductValueEntity.IsEdit"></quill-editor>
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <div *ngIf="!ProductValueEntity.IsEdit">
+                            <button class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="EditProductValue(ProductValueEntity)">
+                              <i class="fa fa-pencil"></i>
+                            </button>
+                          </div>
+                          <div *ngIf="ProductValueEntity.IsEdit">
+                            <button class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="SaveProductValue(ProductValueEntity)">
+                              <i class="fa fa-save"></i>
+                            </button>
+                            <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="CancelProductValue(ProductValueEntity)">
+                              <i class="fa fa-remove"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--end::Portlet-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

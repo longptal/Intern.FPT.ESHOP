@@ -1,0 +1,54 @@
+<div>
+  <div class="m--margin-top-10 fullwidth">
+    <span class="header-section-group">Pack Information: </span>
+    <button class="btn btn-outline-success m-btn m-btn--icon m-btn--outline-2x pull-right" (click)="Add({Id: 0, IsEdit: true})">
+      <span>
+        <i class="fa fa-plus"></i>
+        <span>Add Pack</span>
+      </span>
+    </button>
+  </div>
+  <table class="table table-bordered m-table m-table--border-metal table-hover m-table--head-bg-success">
+    <thead>
+      <tr>
+        <th class="text-center">#</th>
+        <th>UnitPrice</th>
+        <th>Quantity</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let PackEntity of Entities; let i = index">
+        <td class="text-center">{{i + 1}}</td>
+        <td>
+          <span *ngIf="!PackEntity.IsEdit">{{PackEntity.UnitPrice}}</span>
+          <input *ngIf="PackEntity.IsEdit" class="form-control" placeholder="Enter UnitPrice..." [(ngModel)]="PackEntity.UnitPrice" [ngModelOptions]="{standalone: true}" />
+        </td>
+        <td>
+          <span *ngIf="!PackEntity.IsEdit">{{PackEntity.Quantity}}</span>
+          <input *ngIf="PackEntity.IsEdit" class="form-control" placeholder="Enter Quantity..." [(ngModel)]="PackEntity.Quantity" [ngModelOptions]="{standalone: true}" />
+        </td>
+        <td class="text-center">
+          <div *ngIf="!PackEntity.IsEdit">
+            <button class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="Edit(PackEntity)">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                    mwlConfirmationPopover [popoverTitle]="'Are you sure?'" placement="top" (confirm)="Delete(PackEntity)" (cancel)="cancelClicked = true">
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>
+          <div *ngIf="PackEntity.IsEdit">
+            <button class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="Save(PackEntity)">
+              <i class="fa fa-save"></i>
+            </button>
+            <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill" (click)="Cancel(PackEntity)">
+              <i class="fa fa-remove"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

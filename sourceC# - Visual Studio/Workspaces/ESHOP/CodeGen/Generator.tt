@@ -1,0 +1,46 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ output extension="log.txt" #>
+<#@ assembly name="EnvDte" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #> 
+<#@ include file="MultipleOutputHelper.ttinclude" once="true"#>
+<#@ include file="Helper.ttinclude" once="true"#>
+<#@ include file="EntityTemplate.ttinclude"#>
+<#@ include file="EModelTemplate.ttinclude"#>
+<#
+
+        const string projectName    = "EShop";
+        const string modelNamespace = projectName + ".Models";
+
+
+        DTE     visualStudio = ((IServiceProvider) Host).GetService(typeof(DTE)) as DTE;
+        Project project      = visualStudio.Solution.Projects.Cast<Project>().First(p => p.Name == projectName);
+
+        if (project == null)
+        {
+            Error("Project not found");
+            return null;
+        }
+
+        string projectPath = Path.GetDirectoryName(project.FullName);
+
+
+        ProjectItem modelsFolder = project.ProjectItems.Item("Models");
+        IEnumerable<CodeClass> modelCodeClasses = Helper
+                                                 .GetClassesInNameSpace(modelsFolder.ProjectItems.Cast<ProjectItem>(),
+                                                                        modelNamespace)
+                                                 .Where(modelClass => !modelClass.IsDerivedFrom["Microsoft.EntityFrameworkCore.DbContext"])
+                                                 .ToList();
+        var modelNames = new HashSet<string>();
+        modelNames.UnionWith(modelCodeClasses.Select(modelClass => modelClass.Name));
+
+
+        Host.SetOutputEncoding(Encoding.UTF8, false);
+
+        new EntityClassesGenerator(Host, modelCodeClasses, projectPath).Generate();
+        new EModelClassesGenerator(Host, modelCodeClasses, projectPath).Generate();
+#>

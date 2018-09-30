@@ -1,0 +1,55 @@
+<div class="fixed-top" *ngIf="EmployeeInfoService.EmployeeEntity != null">
+    <div class="nav-fixed-top">
+        <div class="page-header-top" style="background-color: #ffffff">
+            <div class="container">
+                <div class="page-logo">
+                    <a href="/"><b>EShop Management</b></a>
+                </div>
+                <div class="page-info" id="asds">
+                  <div class="page-info-content">
+                    <span class="page-info-content-name">{{EmployeeInfoService.EmployeeEntity !== undefined ? EmployeeInfoService.EmployeeEntity.Display : "" }}</span>
+                    <a href="Home/Logout">
+                      <i class="glyphicon glyphicon-log-out"></i> Log Out
+                    </a>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="nav navbar-inverse fpt-navbar navbar-toggleable-md">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleContainer"
+                aria-controls="navbarToggleExternalContent" aria-expanded="true" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="container collapse navbar-collapse" id="navbarsExampleContainer">
+            <ul class="navbar-nav mr-auto">
+                <li *ngFor="let menu of MenuList"
+                    [ngClass]=" (menu.hasSub() ? ' dropdown' : '')">
+                    <a class="fpt-nav-link nav-link dropbtn" routerLinkActive="active-link"
+                       [routerLink]="[menu.Link]">
+                        {{menu.Name}}
+                        <i class="fa fa-angle-down" *ngIf="menu.hasSub() && menu.Link != 'Fams'"></i>
+                    </a>
+                    <div class="dropdown-content" *ngIf="menu.hasSub() && menu.Link != 'Fams'">
+                        <ul style="list-style: none; padding: 0;">
+                            <li [ngClass]=" (sub.hasSub() ? ' side-dropdown' : '')" *ngFor="let sub of menu.Sub" style="height: 40.2px">
+                                <a class="fpt-dropdown-menu fpt-nav-link sub-submenu"
+                                   routerLinkActive="active-sublink"
+                                   [routerLink]="[sub.Link]">
+                                    {{sub.Name}}
+                                    <i class="fa fa-angle-right" style="float: right; top: 4px; position: relative;" *ngIf="sub.hasSub()"></i>
+                                </a>
+                                <div class="side-dropdown-content" *ngIf="sub.hasSub()">
+                                    <a *ngFor="let Subsub of sub.Sub" class="fpt-dropdown-menu fpt-nav-link"
+                                       routerLinkActive="active-sublink"
+                                       [routerLink]="[Subsub.Link]">{{Subsub.Name}}</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+</div>

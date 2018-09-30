@@ -1,0 +1,101 @@
+<!-- BEGIN: Subheader -->
+<div class="m-subheader" appunwraptag="">
+    <div class="d-flex align-items-center border-title">
+        <div class="mr-auto">
+            <h3 class="m-subheader__title">
+                Supplier Management
+            </h3>
+        </div>
+        <div>
+            <button class="btn btn-outline-success m-btn m-btn--icon m-btn--outline-2x" (click)="AddSupplier()">
+                <span>
+                    <i class="fa fa-plus"></i>
+                    <span>Add</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- END: Subheader -->
+<!--BEGIN: Content-->
+<div class="m-content">
+    <div class="col-md-12">
+        <div class="m-section">
+            <table class="table table-bordered m-table m-table--border-metal table-hover table-nowhitespace">
+                <thead>
+                    <tr>
+                        <th style="width: 5%">#</th>
+                        <th style="width: 30%">Name</th>
+                        <th style="width: 10%">TaxCode</th>
+                        <th style="width: 45%">Description</th>
+                        <th style="width: 10%">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+                    <td>
+                      <input type="text" class="form-control" placeholder="Search TaxCode..." />
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" placeholder="Search Name..." />
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" placeholder="Search Description..." />
+                    </td>
+                    <td class="button-crud">
+                      <div>
+                        <button class="btn btn-brand m-btn m-btn--icon btn-sm m-btn--icon-only m-btn--pill">
+                          <i class="fa fa-search"></i>
+                        </button>
+                        <button class="btn btn-primary m-btn m-btn--icon btn-sm m-btn--icon-only  m-btn--pill">
+                          <i class="fa fa-refresh"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                    <tr *ngFor="let SupplierEntity of Entities; index as i">
+                        <td scope="row">{{i + 1}}</td>
+                        <td>
+                            <div *ngIf="!SupplierEntity.IsEdit">{{SupplierEntity.TaxCode}}</div>
+                            <input class="input-text form-control" *ngIf="SupplierEntity.IsEdit" placeholder="Enter TaxCode..." [(ngModel)]="SupplierEntity.TaxCode" />
+                        </td>
+                        <td>
+                            <div *ngIf="!SupplierEntity.IsEdit">{{SupplierEntity.Name}}</div>
+                            <input class="input-text form-control" *ngIf="SupplierEntity.IsEdit" placeholder="Enter Name..." [(ngModel)]="SupplierEntity.Name" />
+                        </td>
+                        <td>
+                            <div *ngIf="!SupplierEntity.IsEdit">{{SupplierEntity.Description}}</div>
+                            <input class="input-text form-control" *ngIf="SupplierEntity.IsEdit" placeholder="Enter Description..." [(ngModel)]="SupplierEntity.Description" />
+                        </td>
+                        <td class="button-crud">
+                            <div *ngIf="!SupplierEntity.IsEdit">
+                                <button class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                                   data-toggle="m-tooltip" data-original-title="Edit" data-placement="left" data-skin="dark" (click)="EditSupplier(SupplierEntity)">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                                   data-toggle="m-tooltip" data-original-title="Delete" data-placement="right" data-skin="dark"
+                                   mwlConfirmationPopover [popoverTitle]="'Are you sure?'" placement="top" (confirm)="DeleteSupplier(SupplierEntity)" (cancel)="cancelClicked = true">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                            <div *ngIf="SupplierEntity.IsEdit">
+                                <button class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                                   data-toggle="m-tooltip" data-original-title="Save" data-placement="left" data-skin="dark" (click)="SaveSupplier(SupplierEntity)">
+                                    <i class="fa fa-save"></i>
+                                </button>
+                                <button class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill"
+                                   data-toggle="m-tooltip" data-original-title="Cancel" data-placement="right" data-skin="dark" (click)="CancelSupplier(SupplierEntity)">
+                                    <i class="fa fa-remove"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<app-paging [PagingModel]="PagingModel" [dot]="true" (onChanges)="SearchSupplier()"></app-paging>
+<!--END: Content-->

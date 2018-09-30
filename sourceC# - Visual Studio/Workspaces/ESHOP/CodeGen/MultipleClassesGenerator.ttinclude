@@ -1,0 +1,66 @@
+﻿<#@ assembly name="EnvDTE" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
+<#@ include file="Helper.ttinclude" once="true"#>
+<#@ include file="MultipleOutputHelper.ttinclude" once="true"#>
+<#+
+    abstract class MultipleClassesGenerator : TextTransformation
+    {
+        readonly           string                 projectPath;
+        protected          Manager                manager;
+        protected readonly IEnumerable<CodeClass> modelCodeClasses;
+        readonly           HashSet<string>        modelNames = new HashSet<string>();
+
+        protected abstract string OutputFolderName { get; }
+
+        string OutputPath
+        {
+            get
+            {
+                var path = Path.Combine(projectPath, OutputFolderName);
+                Directory.CreateDirectory(path);
+                return path;
+            }
+        }
+
+        public MultipleClassesGenerator(ITextTemplatingEngineHost host,
+                                        IEnumerable<CodeClass>    modelCodeClasses,
+                                        string                    projectPath)
+        {
+            this.manager          = Manager.Create(host, GenerationEnvironment);
+            this.modelCodeClasses = modelCodeClasses;
+            this.projectPath      = projectPath;
+            modelNames.UnionWith(this.modelCodeClasses.Select(modelClass => modelClass.Name));
+        }
+
+        public virtual void Generate()
+        {
+            manager.OutputPath = OutputPath;
+            foreach (CodeClass modelClass in modelCodeClasses)
+            {
+                GenerateFile(modelClass);
+
+                manager.EndBlock();
+            }
+
+            manager.Process(true);
+        }
+
+        protected abstract void GenerateFile(CodeClass modelClass);
+
+        protected bool IsModelType(string name)
+        {
+            return modelNames.Contains(name);
+        }
+
+        public override string TransformText()
+        {
+            return GenerationEnvironment.ToString();
+        }
+    }
+
+#>

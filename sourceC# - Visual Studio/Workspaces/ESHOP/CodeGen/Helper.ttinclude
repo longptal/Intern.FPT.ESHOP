@@ -1,0 +1,82 @@
+﻿<#@ assembly name="System.Core" #>
+<#@ assembly name="EnvDte" #>
+<#@ assembly name="System.Data.Entity.Design" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Globalization" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.Data.Entity.Design.PluralizationServices" #>
+<#+
+    static class Helper
+    {
+        public static PluralizationService pluralizationService =
+            PluralizationService.CreateService(CultureInfo.GetCultureInfo("en-us"));
+
+        public static string Decapitalize(string s)
+        {
+            return s.Substring(0, 1).ToLower() + s.Substring(1);
+        }
+
+        public static IEnumerable<CodeClass> GetClassesInNameSpace(IEnumerable<ProjectItem> items, string nameSpace)
+        {
+            var classItems = new List<EnvDTE.CodeClass>();
+
+            IEnumerable<ProjectItem> csFileProjectItems =
+                items.Where(d => d.Properties.Item("FullPath").Value.ToString().EndsWith(".cs"));
+
+            foreach (ProjectItem csFileProjectItem in csFileProjectItems)
+            {
+                EnvDTE.FileCodeModel model = csFileProjectItem.FileCodeModel;
+                foreach (var modelCodeElements in model.CodeElements)
+                {
+                    if (modelCodeElements is CodeNamespace)
+                    {
+                        var codeNameSpace = modelCodeElements as CodeNamespace;
+                        if (codeNameSpace.FullName == nameSpace)
+                        {
+                            foreach (var modelCodeElementChild in codeNameSpace.Children)
+                            {
+                                if (modelCodeElementChild is CodeClass)
+                                {
+                                    classItems.Add(modelCodeElementChild as CodeClass);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return classItems;
+        }
+
+        public static IEnumerable<CodeProperty> GetProperties(ProjectItem item)
+        {
+            FileCodeModel codeModel    = item.FileCodeModel;
+            var           propertyList = new List<CodeProperty>();
+            FindProperties(codeModel.CodeElements, propertyList);
+            return propertyList;
+        }
+
+        public static void FindProperties(IEnumerable elements, ICollection<CodeProperty> properties)
+        {
+            foreach (CodeElement element in elements)
+            {
+                var property = element as CodeProperty;
+                if (property != null)
+                {
+                    properties.Add(property);
+                }
+
+                FindProperties(element.Children, properties);
+            }
+        }
+
+        public static string GetGenericCollectionType(string fullname)
+        {
+            string fullTypeName = fullname.Split(new[] {"<", ">"}, StringSplitOptions.None)[1];
+            return fullTypeName.Split('.').Last();
+        }
+    }
+
+#>

@@ -1,0 +1,6 @@
+.idea
+.vs
+Eshop\FrontEnd\node_modules
+Eshop\FrontEnd\dist
+Eshop\wwwroot
+\EShop\FrontEnd\yarn.lock

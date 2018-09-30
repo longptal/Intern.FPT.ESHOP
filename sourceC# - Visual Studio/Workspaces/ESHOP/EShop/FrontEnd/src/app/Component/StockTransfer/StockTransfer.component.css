@@ -1,0 +1,30 @@
+﻿body {
+}
+.add-category{
+    float: right;
+    margin-bottom: 1em;
+}
+.input-text{
+    max-width: 150px;
+}
+
+.img-size{
+    width: 65%;
+}
+.m-dropdown {
+    margin-left: 11px;
+    top: -4px;
+}
+.m-dropdown.m-dropdown--align-center.m-dropdown--small .m-dropdown__wrapper {
+    width: 93px;
+    margin-left: -49.5px;
+}
+.m-dropdown .m-dropdown__wrapper .m-dropdown__body{
+    padding: 4px;
+}
+.m-nav .m-nav__item > .m-nav__link {
+    padding: 2px 11px;
+}
+.flag-icon{
+    text-align: center!important;
+}

@@ -1,0 +1,167 @@
+<div class="row" style="margin-top: 2rem;margin-bottom: 2rem">
+  <div class="col-md-2"></div>
+  <div class="col-md-6" style="padding-left: 4rem;">
+    <ng-select-user [Service]="EmployeeService" [Entity]="SearchEmployeeEntity.Display"
+                    (Change)="SearchEmployeeEntity.Display = $event?.Display; Search(SearchEmployeeEntity)"
+                    (keyup.enter)="Search(SearchEmployeeEntity)"
+                    [IsSearch]="true" [Placeholder]="'Search...'"></ng-select-user>
+  </div>
+  <button class="btn btn-primary" (click)="AddNewEmployee()">ADD</button>
+</div>
+<div class="row">
+  <!--<div class="col-md-3">-->
+  <!--<div class="employee-card" (click)="LoadDataToUpdateModal(Employee,i)">-->
+  <!--&lt;!&ndash;<img class="card-avatar-sm"&ndash;&gt;-->
+  <!--&lt;!&ndash;[src]="Employee.Avatar != null ? Employee.Avatar : '/assets/img_avatar.png'" alt="Card image">&ndash;&gt;-->
+  <!--<span class="fa fa-5x new-employee-avatar fa-user-plus"></span>-->
+  <!--&lt;!&ndash;<div class="employee-card-info">&ndash;&gt;-->
+  <!--&lt;!&ndash;NEW EMPLOYEE&ndash;&gt;-->
+  <!--&lt;!&ndash;</div>&ndash;&gt;-->
+  <!--</div>-->
+  <!--</div>-->
+  <div class="col-md-3" *ngFor="let Employee of (Entities ? Entities : []); let i = index">
+    <div class="employee-card" (click)="LoadDataToUpdateModal(Employee,i)">
+      <img class="card-avatar-sm"
+           [src]="Employee.Picture != null ? Employee.Picture : '/assets/img_avatar.png'" alt="Card image">
+      <div class="employee-card-info">
+        <div>
+            <span class="username-post-content">
+                {{Employee.Display}}
+            </span>
+        </div>
+        <div>
+          <!--<div *ngIf="Employee.StoreManagerEntities.length > 0">-->
+            <!--<b>Manager</b>-->
+          <!--</div>-->
+          <!--<div *ngIf="Employee.StoreManagerEntities.length == 0 && Employee.StoreEmployeeEntities.length > 0">-->
+            <!--<b>Employee</b>-->
+          <!--</div>-->
+          <div>Code : {{Employee.Id | EmployeeCode}}</div>
+          <div>Date of Birth : {{Employee.Birthday | date: 'dd-MM-yyyy'}}</div>
+          <!--<div>FromDate : {{Employee.StoreEmployeeEntities[0]?.FromDate | date: 'dd-MM-yyyy'}}</div>-->
+          <!--<div>ToDate : {{Employee.StoreEmployeeEntities[0]?.ToDate | date: 'dd-MM-yyyy'}}</div>-->
+          <!--<a class="reply-btn-post-content">-->
+          <!--{{Employee.Id | EmployeeCode}}-->
+          <!--</a>-->
+          <!--<div class="time-post-content" *ngIf="Employee.StoreManagerEntities.length > 0">-->
+          <!--<i class="fa fa-clock-o" aria-hidden="true"></i> Manager-->
+          <!--</div>-->
+          <!--<div class="time-post-content"-->
+          <!--*ngIf="Employee.StoreManagerEntities.length == 0 && Employee.StoreEmployeeEntities.length > 0">-->
+          <!--<i class="fa fa-clock-o" aria-hidden="true"></i> Employee-->
+          <!--</div>-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-modal #EditModal>
+  <modal-header>
+    <h5 class="modal-title" id="add_modal">
+      <i class="fa fa-dropbox" aria-hidden="true"></i>
+      <span *ngIf="EditEmployee.Id != 0">Edit</span>
+      <span *ngIf="EditEmployee.Id == 0">Create</span> {{ Title }}
+    </h5>
+  </modal-header>
+  <modal-body>
+    <div class="row">
+      <div class="col-md-2">
+        <avatar [(ngModel)]="EditEmployee.Picture"></avatar>
+      </div>
+      <div class="col-md-10">
+        <div class="row">
+          <!--<div class="col-md-4 input-row">-->
+          <!--<div>Facebook</div>-->
+          <!--<input class="form-control" [(ngModel)]="EditEmployee.FacebookEmail" type="text"-->
+          <!--placeholder="Enter FacebookEmail...">-->
+          <!--</div>-->
+          <!--<div class="col-md-4 input-row">-->
+          <!--<div>Google</div>-->
+          <!--<input class="form-control" [(ngModel)]="EditEmployee.GoogleEmail" type="text"-->
+          <!--placeholder="Enter GoogleEmail...">-->
+          <!--</div>-->
+          <div class="col-md-4 input-row">
+            <div>Họ và tên</div>
+            <input class="form-control" [(ngModel)]="EditEmployee.Display" type="text"
+                   placeholder="Enter DisplayName...">
+          </div>
+          <div class="col-md-4 input-row">
+            <div>Mã nhân viên</div>
+            <input class="form-control" [ngModel]="EditEmployee.Id | EmployeeCode" type="text"
+                   placeholder="Auto generated..." disabled>
+          </div>
+          <!--<div class="col-md-4 input-row">-->
+            <!--<div>From Date</div>-->
+            <!--<datetime [ngModel]="EditEmployee?.StoreEmployeeEntities[0]?.FromDate"-->
+                      <!--placeholder="Auto generated..." [disabled]="EditEmployee.Id != 0"></datetime>-->
+          <!--</div>-->
+          <div class="col-md-4 input-row">
+            <div>Date Of Birth</div>
+            <datetime [(ngModel)]="EditEmployee.Birthday"
+                      [placeholder]="'Enter DateOfBirth...'"></datetime>
+          </div>
+          <!--<div class="col-md-4 input-row">-->
+            <!--<div>Address</div>-->
+            <!--<input class="form-control" [(ngModel)]="EditEmployee.Address" type="text"-->
+                   <!--placeholder="Enter Address..."/>-->
+          <!--</div>-->
+          <!--<div class="col-md-4 input-row">-->
+            <!--<div>To Date</div>-->
+            <!--<datetime [(ngModel)]="EditEmployee.StoreEmployeeEntities[0].ToDate"-->
+                      <!--placeholder="To Date..."></datetime>-->
+          <!--</div>-->
+          <div class="col-md-4 input-row">
+            <div>Phone Number</div>
+            <input class="form-control" [(ngModel)]="EditEmployee.Phone" type="text"
+                   placeholder="Enter PhoneNumber...">
+          </div>
+          <div class="col-md-4 input-row">
+            <div>Số chứng minh thư</div>
+            <input class="form-control" [(ngModel)]="EditEmployee.IdentityCard" type="text"
+                   placeholder="Enter IdentityCard...">
+          </div>
+          <div class="col-md-4 input-row">
+            <div>Tên đăng nhập</div>
+            <input class="form-control" [(ngModel)]="EditEmployee.Username" type="text"
+                   placeholder="Enter UserName...">
+          </div>
+          <!--<div class="col-md-8 input-row">-->
+            <!--<div>Cửa hàng</div>-->
+            <!--<ng-select-custom [Init]="{Name : EditEmployee?.StoreEmployeeEntities[0]?.StoreEntity?.Name}"-->
+                              <!--[Service]="StoreService"-->
+                              <!--[(ngModel)]="EditEmployee.StoreEmployeeEntities[0].StoreId"-->
+                              <!--(Change)="LoadService($event); EditEmployee.StoreEmployeeEntities[0].ToDate = null"-->
+                              <!--[BindProperty]="'Id'"></ng-select-custom>-->
+          <!--</div>-->
+          <div class="col-md-4 input-row">
+            <div>Password</div>
+            <input class="form-control" [(ngModel)]="EditEmployee.Password" type="password"
+                   placeholder="Enter HashPassword..."/>
+          </div>
+          <!--<div class="col-md-12 input-row">-->
+            <!--<div>Dịch vụ</div>-->
+            <!--<div class="row input-service">-->
+              <!--<div class="col-md-3 input-row" *ngFor="let ServiceStore of ServiceStoreEntites">-->
+                <!--<checkbox [(ngModel)]="ServiceStore.IsChecked"></checkbox>-->
+                <!--<span>{{ServiceStore.ServiceEntity.Name}}</span>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+        </div>
+      </div>
+    </div>
+  </modal-body>
+  <modal-footer>
+    <modal-footer>
+      <button (click)="Save()"
+              class="btn btn-success">
+        <i class="fa fa-check" aria-hidden="true"></i>
+        <span *ngIf="EditEmployee.Id != 0">Edit</span>
+        <span *ngIf="EditEmployee.Id == 0">Create</span>
+      </button>
+      <button type="button" class="btn btn-danger" (click)="EditModal.Close()">
+        <span><i class="fa fa-times" aria-hidden="true"></i> Cancel</span>
+      </button>
+    </modal-footer>
+  </modal-footer>
+</app-modal>
